@@ -33,6 +33,14 @@ public class Client2 {
             try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
+                 /* After connection socket, client sending REGISTER message with id to srever
+                * if server response with Register object
+                * this Client will hit first
+                * if server response with Message object
+                * fighter tries to bias and hit back
+                * (Message - object with hit)
+                */
+
                 Register register = new Register(clientId);
                 out.writeObject(register);
                 out.flush();

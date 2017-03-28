@@ -29,7 +29,6 @@ public class Server {
                 Connection connection = new Connection(socket);
                 connection.start();
 
-                Object monitor = new Object();
                 synchronized (connectionMap) {
                     connectionMap.wait();
                     Register register = new Register();

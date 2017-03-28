@@ -6,14 +6,12 @@ import com.company.messageModels.Register;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Random;
 
 /**
  * Created by Cyborg on 3/27/2017.
  */
 public class Connection extends Thread {
 
-    private Random random = new Random();
     private final Socket socket;
     private ObjectOutputStream outputStream = null;
 
@@ -43,11 +41,6 @@ public class Connection extends Thread {
                         }
 
                         System.out.println("Registration figther with id=" + register.getClientId());
-
-                        /*if (Server.connectionMap.size()>1){
-                            Connection connectionWhoFirst = Server.connectionMap.get(random.nextInt(2)+1);
-                            connectionWhoFirst.sendRegister(register);
-                        }*/
 
                     }
 
