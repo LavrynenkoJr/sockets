@@ -1,4 +1,4 @@
-package com.company;
+package com.company.messageModels;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

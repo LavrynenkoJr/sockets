@@ -1,5 +1,9 @@
 package com.company;
 
+import com.company.messageModels.FightResult;
+import com.company.messageModels.Massage;
+import com.company.messageModels.Register;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
