@@ -1,12 +1,16 @@
 package com.company;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Client {
-
-    private static int clientId = 1;
-    private static int toClientId = 2;
+/**
+ * Created by Cyborg on 3/27/2017.
+ */
+public class Client2 {
+    private static int clientId = 2;
+    private static int toClientId = 1;
 
     public static final int PORT = 19000;
     public static final String HOST = "localhost";
@@ -16,7 +20,8 @@ public class Client {
 
         Socket socket = null;
 
-        Fighter fighter = new Fighter(1);
+        Fighter fighter = new Fighter(2);
+
 
         try {
             socket = new Socket(HOST, PORT);
@@ -24,19 +29,12 @@ public class Client {
             try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-               /* After connection socket, client sending REGISTER message with id to srever
-                * if server response with Register object
-                * this Client will hit first
-                * if server response with Message object
-                * fighter tries to bias and hit back
-                * (Message - object with hit)
-                */
-
                 Register register = new Register(clientId);
                 out.writeObject(register);
                 out.flush();
 
                 while (true) {
+
 
                     try {
                         Object object = in.readObject();
@@ -47,6 +45,7 @@ public class Client {
                             out.flush();
                         }
 
+
                         if (object instanceof Massage){
                             Massage inputMas = (Massage) object;
                             fighter.damage(inputMas.getHit());
@@ -55,7 +54,6 @@ public class Client {
                             Massage massage = new Massage(clientId, toClientId, fighter.hit(), fighter.getHealth());
                             out.writeObject(massage);
                             out.flush();
-
 
                         }else if (object instanceof FightResult){
                             System.out.println("fight result");
@@ -79,5 +77,8 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
     }
 }

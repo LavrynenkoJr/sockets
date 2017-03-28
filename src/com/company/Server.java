@@ -5,49 +5,44 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 
 public class Server {
+    private static Random random = new Random();
 
     public static final int PORT = 19000;
 
-    public static void main(String[] args) {
+    public static Map<Integer, Connection> connectionMap = new HashMap<>();
+
+    public static void main(String[] args) throws InterruptedException {
+
+        System.out.println("Start server");
 
         ServerSocket serverSocket = null;
 
         try {
             serverSocket = new ServerSocket(PORT);
             while (true) {
-                // ожидание входящего соединения
+
                 Socket socket = serverSocket.accept();
 
-                difClient(socket);
+                Connection connection = new Connection(socket);
+                connection.start();
+
+                Object monitor = new Object();
+                synchronized (connectionMap) {
+                    connectionMap.wait();
+                    Register register = new Register();
+                    if (Server.connectionMap.size() > 1) {
+                        Connection connectionWhoFirst = Server.connectionMap.get(random.nextInt(2) + 1);
+                        connectionWhoFirst.sendRegister(register);
+                    }
+                }
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void difClient(Socket sockett){
-
-        final Socket socket = sockett;
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try (InputStream in = socket.getInputStream();
-                     OutputStream out = socket.getOutputStream()){
-
-                    byte[] buf = new byte[32*1024];
-                    int readBytes = in.read(buf);
-                    String line = new String(buf, 0, readBytes);
-                    System.out.println(line);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
     }
 }
